@@ -1,3 +1,3 @@
 @echo off
-call cmake
+call cmake CMakeLists.txt
 pause

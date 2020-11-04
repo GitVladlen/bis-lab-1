@@ -3,7 +3,8 @@ cmake_minimum_required (VERSION 2.6)
 # Maps to Visual Studio solution file (Name.sln)
 # The solution will have all targets (exe, lib, dll) 
 # as Visual Studio projects (.vcproj)
-project (bis-lab-1)
+set(MY_PROJECT_NAME "bis-lab-1")
+project (MY_PROJECT_NAME)
  
 # Turn on the ability to create folders to organize projects (.vcproj)
 # It creates "CMakePredefinedTargets" folder by default and adds CMake
