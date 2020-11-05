@@ -4,7 +4,15 @@
 # Set Properties->General->Configuration Type to Application(.exe)
 # Creates app.exe with the listed sources (main.cxx)
 # Adds sources to the Solution Explorer
-add_executable (${MY_PROJECT_NAME} main.cpp)
+set(MY_PROJECT_SOURCES
+    User.h
+    User.cpp
+    App.h
+    App.cpp
+    main.cpp
+)
+
+add_executable(${MY_PROJECT_NAME} ${MY_PROJECT_SOURCES})
  
 # Properties->Linker->Input->Additional Dependencies
 ##target_link_libraries (app math)
