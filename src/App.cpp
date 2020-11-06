@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 
+static const char * DEFAULT_DATA_FILE_NAME = "users.txt";
+
 App::App()
     : m_isRunned( false )
 {
@@ -36,6 +38,9 @@ void App::mainMenu()
     std::cout << "1. login" << std::endl;
     std::cout << "2. exit" << std::endl;
 
+    std::cout << "3. read (debug)" << std::endl;
+    std::cout << "4. write (debug)" << std::endl;
+
     int choice = 0;
     std::cin >> choice;
 
@@ -46,6 +51,10 @@ void App::mainMenu()
         break;
     case 2:
         this->exit();
+    case 3:
+        this->readUsers();
+    case 4:
+        this->writeUsers();
     default:
         break;
     }
@@ -64,11 +73,11 @@ void App::login()
 
 void App::readUsers()
 {
-    std::ifstream infile( "users.txt" );
+    std::ifstream inFile( DEFAULT_DATA_FILE_NAME );
 
     std::string line;
 
-    while( std::getline( infile, line ) )
+    while( std::getline( inFile, line ) )
     {
         std::istringstream iss( line );
 
@@ -84,10 +93,15 @@ void App::readUsers()
         User user = User();
     }
 
-    infile.close();
+    inFile.close();
 }
 
 void App::writeUsers()
 {
+    std::ofstream outFile( DEFAULT_DATA_FILE_NAME, std::ios::app );
 
+    outFile << "Carl pass232*_/" << std::endl;
+    outFile << "John 34pass232*_/" << std::endl;
+
+    outFile.close();
 }
