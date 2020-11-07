@@ -110,7 +110,7 @@ void App::loggedAdminUserMainMenu()
         this->logout();
         break;
     case 2:
-        this->changePass();
+        this->changePassword();
         break;
 
     case 5:
@@ -154,7 +154,7 @@ void App::loggedNotAdminUserMainMenu()
         this->logout();
         break;
     case 2:
-        this->changePass();
+        this->changePassword();
         break;
 
     case 5:
@@ -202,7 +202,7 @@ void App::logout()
     m_loggedUserName = "";
 }
 
-void App::changePass()
+void App::changePassword()
 {
     std::string currentPassword;
     std::cout << "Enter current password: ";
@@ -216,8 +216,14 @@ void App::changePass()
     }
 
     std::string newPassword;
-    std::cout << "Enter new password: ";
+    std::cout << "Enter new password (HERE MUST BE PASSWORD LIMITS, pass len >= 4): ";
     std::cin >> newPassword;
+
+    if( this->checkPassword( newPassword ) == false )
+    {
+        std::cout << "[WARNING] Invalid password, check password limits" << std::endl;
+        return;
+    }
 
     std::string newPasswordRepeat;
     std::cout << "Repeat new password: ";
@@ -336,4 +342,17 @@ User & App::getUser( const std::string & _userLogin )
 User & App::getLoggedUser()
 {
     return this->getUser( m_loggedUserName );
+}
+
+bool App::checkPassword( const std::string & _pass ) const
+{
+    // dummy check
+    if( _pass.length() < 4 )
+    {
+        return false;
+    }
+
+    // todo: implement check according task
+
+    return true;
 }

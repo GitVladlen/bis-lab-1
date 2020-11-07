@@ -23,7 +23,7 @@ protected:
 	void login();
 	void logout();
 
-	void changePass();
+	void changePassword();
 
 protected:
 	void readUsers();
@@ -35,6 +35,8 @@ protected:
 	bool hasUser( const std::string & _userLogin ) const;
 	User & getUser( const std::string & _userLogin );
 	User & getLoggedUser();
+
+	bool checkPassword( const std::string & _pass ) const;
 
 private:
 	bool m_isRunned;
