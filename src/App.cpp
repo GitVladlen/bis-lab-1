@@ -216,7 +216,7 @@ void App::changePassword()
     }
 
     std::string newPassword;
-    std::cout << "Enter new password (HERE MUST BE PASSWORD LIMITS, pass len >= 4): ";
+    std::cout << "Enter new password (letters, digits, punctuation marks): ";
     std::cin >> newPassword;
 
     if( this->checkPassword( newPassword ) == false )
@@ -347,12 +347,48 @@ User & App::getLoggedUser()
 bool App::checkPassword( const std::string & _pass ) const
 {
     // dummy check
-    if( _pass.length() < 4 )
+    if( _pass.length() < 3 )
     {
         return false;
     }
 
-    // todo: implement check according task
+    // must contain latin letters, digits and punctuation marks( "", .; :!? )(\ / ")
+
+    bool hasLatinLetters = false;
+    bool hasDigits = false;
+    bool hasPunctuationMarks = false;
+
+    for( int32_t i = 0; i < _pass.length(); ++i )
+    {
+        char ch = _pass[i];
+        if( isalpha( ch ) != 0 )
+        {
+            hasLatinLetters = true;
+        }
+        else if( isdigit( ch ) != 0 )
+        {
+            hasDigits = true;
+        }
+        else if( ispunct( ch ) != 0 )
+        {
+            hasPunctuationMarks = true;
+        }
+    }
+
+    if( hasLatinLetters == false )
+    {
+        return false;
+    }
+
+    if( hasDigits == false )
+    {
+        return false;
+    }
+
+    if( hasPunctuationMarks == false )
+    {
+        return false;
+    }
 
     return true;
 }
