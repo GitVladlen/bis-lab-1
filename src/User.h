@@ -21,9 +21,6 @@ public:
     bool getIsBlocked() const;
     void setIsBlocked( bool _value );
 
-    bool getIsLoggedIn() const; // ??
-    void setIsLoggedIn( bool _value ); // ??
-
 public:
     std::string toString() const;
     void fromString();
@@ -33,6 +30,5 @@ private:
     std::string m_password;
     bool m_isAdmin;
     bool m_isBlocked;
-    
-    bool m_isLoggedIn; // ??
+    bool m_isPassCheck;
 };

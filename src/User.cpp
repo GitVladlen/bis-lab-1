@@ -4,7 +4,7 @@
 
 User::User()
     : m_isAdmin( false )
-    , m_isLoggedIn( false )
+    , m_isBlocked( false )
 {
 }
 
@@ -52,16 +52,6 @@ void User::setIsBlocked( bool _value )
     m_isBlocked = _value;
 }
 
-bool User::getIsLoggedIn() const
-{
-    return m_isLoggedIn;
-}
-
-void User::setIsLoggedIn( bool _value )
-{
-    m_isLoggedIn = _value;
-}
-
 std::string User::toString() const
 {
     std::stringstream ss;
@@ -76,4 +66,5 @@ std::string User::toString() const
 
 void User::fromString()
 {
+    // todo: implement this
 }

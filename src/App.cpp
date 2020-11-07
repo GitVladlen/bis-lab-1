@@ -91,6 +91,7 @@ void App::loggedAdminUserMainMenu()
     std::cout << "Main menu, user '" << loggedUser.getLogin() << "' (admin):" << std::endl;
     std::cout << " 1. logout" << std::endl;
     std::cout << " 2. change password" << std::endl;
+    std::cout << " 3. list users" << std::endl;
 
     std::cout << " 5. exit" << std::endl;
 
@@ -111,6 +112,9 @@ void App::loggedAdminUserMainMenu()
         break;
     case 2:
         this->changePassword();
+        break;
+    case 3:
+        this->listUsers();
         break;
 
     case 5:
@@ -236,6 +240,14 @@ void App::changePassword()
     }
 
     currentUser.setPassword( newPassword );
+}
+
+void App::listUsers()
+{
+    for( const User & user : m_users )
+    {
+        std::cout << user.getLogin() << std::endl;
+    }
 }
 
 void App::readUsers()
