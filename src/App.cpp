@@ -93,13 +93,19 @@ void App::loggedAdminUserMainMenu()
     std::cout << " 2. change password" << std::endl;
     std::cout << " 3. list users" << std::endl;
 
-    std::cout << " 5. exit" << std::endl;
+    std::cout << " 4. block user" << std::endl;
+    std::cout << " 5. unblock user" << std::endl;
+    std::cout << " 6. enable user password check" << std::endl;
+    std::cout << " 7. disable user password check" << std::endl;
+    std::cout << " 8. create new user" << std::endl;
+
+    std::cout << " 9. exit" << std::endl;
 
     std::cout << "[debug]" << std::endl;
-    std::cout << " 6. read users" << std::endl;
-    std::cout << " 7. write users" << std::endl;
-    std::cout << " 8. print users" << std::endl;
-    std::cout << " 9. reset users" << std::endl;
+    std::cout << " 11. read users" << std::endl;
+    std::cout << " 12. write users" << std::endl;
+    std::cout << " 13. print users" << std::endl;
+    std::cout << " 14. reset users" << std::endl;
 
     int choice = 0;
     std::cout << "> ";
@@ -117,20 +123,36 @@ void App::loggedAdminUserMainMenu()
         this->listUsers();
         break;
 
+    case 4:
+        this->blockUser();
+        break;
     case 5:
+        this->unblockUser();
+        break;
+    case 6:
+        this->enableCheckUserPassword();
+        break;
+    case 7:
+        this->disableCheckUserPassword();
+        break;
+    case 8:
+        this->createNewUser();
+        break;
+
+    case 9:
         this->exit();
         break;
 
-    case 6:
+    case 11:
         this->readUsers();
         break;
-    case 7:
+    case 12:
         this->writeUsers();
         break;
-    case 8:
+    case 13:
         this->printUsers();
         break;
-    case 9:
+    case 14:
         this->resetUsers();
         break;
     default:
@@ -248,6 +270,87 @@ void App::listUsers()
     {
         std::cout << user.getLogin() << std::endl;
     }
+}
+
+void App::blockUser()
+{
+    std::string userLogin;
+    std::cout << "User login to block: " << std::endl;
+    std::cin >> userLogin;
+
+    if( this->hasUser( userLogin ) == false )
+    {
+        std::cout << "[WARNING] Has no user with login'" << userLogin << "'" << std::endl;
+        return;
+    }
+
+    User & user = this->getUser( userLogin );
+
+    user.setIsBlocked( true );
+
+    std::cout << "User with login '" << userLogin << "' is successfully blocked";
+}
+
+void App::unblockUser()
+{
+    std::string userLogin;
+    std::cout << "User login to unblock: " << std::endl;
+    std::cin >> userLogin;
+
+    if( this->hasUser( userLogin ) == false )
+    {
+        std::cout << "[WARNING] Has no user with login'" << userLogin << "'" << std::endl;
+        return;
+    }
+
+    User & user = this->getUser( userLogin );
+
+    user.setIsBlocked( false );
+
+    std::cout << "User with login '" << userLogin << "' is successfully unblocked";
+}
+
+void App::enableCheckUserPassword()
+{
+    std::string userLogin;
+    std::cout << "User login to enable password check: " << std::endl;
+    std::cin >> userLogin;
+
+    if( this->hasUser( userLogin ) == false )
+    {
+        std::cout << "[WARNING] Has no user with login'" << userLogin << "'" << std::endl;
+        return;
+    }
+
+    User & user = this->getUser( userLogin );
+
+    user.setIsPasswordCheck( true );
+
+    std::cout << "User with login '" << userLogin << "' is successfully enable password check";
+}
+
+void App::disableCheckUserPassword()
+{
+    std::string userLogin;
+    std::cout << "User login to disable password check: " << std::endl;
+    std::cin >> userLogin;
+
+    if( this->hasUser( userLogin ) == false )
+    {
+        std::cout << "[WARNING] Has no user with login'" << userLogin << "'" << std::endl;
+        return;
+    }
+
+    User & user = this->getUser( userLogin );
+
+    user.setIsPasswordCheck( false );
+
+    std::cout << "User with login '" << userLogin << "' is successfully disable password check";
+}
+
+void App::createNewUser()
+{
+    // todo: implement this
 }
 
 void App::readUsers()

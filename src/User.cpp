@@ -5,6 +5,7 @@
 User::User()
     : m_isAdmin( false )
     , m_isBlocked( false )
+    , m_isPasswordCheck( true )
 {
 }
 
@@ -52,6 +53,16 @@ void User::setIsBlocked( bool _value )
     m_isBlocked = _value;
 }
 
+bool User::getIsPasswordCheck() const
+{
+    return m_isPasswordCheck;
+}
+
+void User::setIsPasswordCheck( bool _value )
+{
+    m_isPasswordCheck = _value;
+}
+
 std::string User::toString() const
 {
     std::stringstream ss;
@@ -60,11 +71,7 @@ std::string User::toString() const
     ss << this->getPassword() << " ";
     ss << this->getIsAdmin() << " ";
     ss << this->getIsBlocked() << " ";
+    ss << this->getIsPasswordCheck() << " ";
 
     return ss.str();
-}
-
-void User::fromString()
-{
-    // todo: implement this
 }

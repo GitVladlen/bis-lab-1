@@ -46,6 +46,12 @@ protected:
 	void changePassword();
 	void listUsers();
 
+    void blockUser();
+    void unblockUser();
+    void enableCheckUserPassword();
+    void disableCheckUserPassword();
+    void createNewUser();
+
 protected: // debug
 	void readUsers();
 	void writeUsers();
@@ -53,6 +59,7 @@ protected: // debug
 	void resetUsers();
 	void printUsers();
 
+protected:
 	bool hasUser( const std::string & _userLogin ) const;
 	User & getUser( const std::string & _userLogin );
 	User & getLoggedUser();

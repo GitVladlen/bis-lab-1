@@ -21,14 +21,16 @@ public:
     bool getIsBlocked() const;
     void setIsBlocked( bool _value );
 
+    bool getIsPasswordCheck() const;
+    void setIsPasswordCheck( bool _value );
+
 public:
     std::string toString() const;
-    void fromString();
 
 private:
     std::string m_login;
     std::string m_password;
     bool m_isAdmin;
     bool m_isBlocked;
-    bool m_isPassCheck;
+    bool m_isPasswordCheck;
 };
