@@ -75,3 +75,16 @@ std::string User::toString() const
 
     return ss.str();
 }
+
+std::string User::toStringDebug() const
+{
+    std::stringstream ss;
+
+    ss << "login=" << this->getLogin() << " ";
+    ss << "pass=" << this->getPassword() << " ";
+    ss << "is_admin=" << this->getIsAdmin() << " ";
+    ss << "is_blocked=" << this->getIsBlocked() << " ";
+    ss << "is_pass_check=" << this->getIsPasswordCheck() << " ";
+
+    return ss.str();
+}

@@ -24,6 +24,8 @@ app:
 	- exit
 */
 
+// TODO: password brute force check feature!
+
 class App
 {
 public:
@@ -50,6 +52,8 @@ protected:
     void unblockUser();
     void enableCheckUserPassword();
     void disableCheckUserPassword();
+	void enableAdminUser();
+	void disableAdminUser();
     void createNewUser();
 
 protected: // debug
