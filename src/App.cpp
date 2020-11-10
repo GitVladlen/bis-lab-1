@@ -10,6 +10,7 @@ static const char * DEFAULT_DATA_FILE_NAME = "users.txt";
 
 App::App()
     : m_isRunned( false )
+    , m_countLoginFail( 0 )
 {
 }
 
@@ -63,44 +64,95 @@ void App::mainMenu()
 
 void App::notLoggedUserMainMenu()
 {
-    std::cout << "Main menu:" << std::endl;
-    std::cout << " 1. login" << std::endl;
-    std::cout << " 2. exit" << std::endl;
-
-    std::cout << "[debug]" << std::endl;
-    std::cout << " 11. read users" << std::endl;
-    std::cout << " 12. write users" << std::endl;
-    std::cout << " 13. print users" << std::endl;
-    std::cout << " 14. reset users" << std::endl;
-
-    int choice = 0;
-    std::cout << "> ";
-    std::cin >> choice;
-
-    switch( choice )
+    if( this->checkIsBruteForce() == true )
     {
-    case 1:
-        this->login();
-        break;
-    case 2:
-        this->exit();
-        break;
+        std::cout << "[WARNING] Appliction is blocked due to brute force logins!" << std::endl;
+        std::cout << "Main menu:" << std::endl;
+        std::cout << " 1. login (blocked)" << std::endl;
+        std::cout << " 2. about (blocked)" << std::endl;
+        std::cout << " 3. exit" << std::endl;
 
-    case 11:
-        this->readUsers();
-        break;
-    case 12:
-        this->writeUsers();
-        break;
-    case 13:
-        this->printUsers();
-        break;
-    case 14:
-        this->resetUsers();
-        break;
+        std::string choiceString;
+        std::cout << "1-3> ";
+        std::cin >> choiceString;
 
-    default:
-        break;
+        int choice = 0;
+        try
+        {
+            choice = std::stoi( choiceString );
+        }
+        catch( ... )
+        {
+            std::cout << "[WARNING] Invalid choice, enter only numbers" << std::endl;
+            return;
+        }
+
+        switch( choice )
+        {
+        case 3:
+            this->exit();
+            break;
+
+        default:
+            break;
+        }
+    }
+    else
+    {
+        std::cout << "Main menu:" << std::endl;
+        std::cout << " 1. login" << std::endl;
+        std::cout << " 2. about" << std::endl;
+        std::cout << " 3. exit" << std::endl;
+
+        std::cout << "[debug]" << std::endl;
+        std::cout << " 11. read users" << std::endl;
+        std::cout << " 12. write users" << std::endl;
+        std::cout << " 13. print users" << std::endl;
+        std::cout << " 14. reset users" << std::endl;
+
+        std::string choiceString;
+        std::cout << "1-3> ";
+        std::cin >> choiceString;
+
+        int choice = 0;
+        try
+        {
+            choice = std::stoi( choiceString );
+        }
+        catch( ... )
+        {
+            std::cout << "[WARNING] Invalid choice, enter only numbers" << std::endl;
+            return;
+        }
+
+        switch( choice )
+        {
+        case 1:
+            this->login();
+            break;
+        case 2:
+            this->about();
+            break;
+        case 3:
+            this->exit();
+            break;
+
+        case 11:
+            this->readUsers();
+            break;
+        case 12:
+            this->writeUsers();
+            break;
+        case 13:
+            this->printUsers();
+            break;
+        case 14:
+            this->resetUsers();
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
@@ -118,8 +170,8 @@ void App::loggedAdminUserMainMenu()
     std::cout << "Main menu, user '" << loggedUser.getLogin() << "' (admin):" << std::endl;
     std::cout << " 1. logout" << std::endl;
     std::cout << " 2. change password" << std::endl;
-    std::cout << " 3. list users" << std::endl;
 
+    std::cout << " 3. list users" << std::endl;
     std::cout << " 4. block user" << std::endl;
     std::cout << " 5. unblock user" << std::endl;
     std::cout << " 6. enable user password check" << std::endl;
@@ -130,9 +182,20 @@ void App::loggedAdminUserMainMenu()
 
     std::cout << " 11. exit" << std::endl;
 
+    std::string choiceString;
+    std::cout << "1-11> ";
+    std::cin >> choiceString;
+
     int choice = 0;
-    std::cout << "> ";
-    std::cin >> choice;
+    try
+    {
+        choice = std::stoi( choiceString );
+    }
+    catch( ... )
+    {
+        std::cout << "[WARNING] Invalid choice, enter only numbers" << std::endl;
+        return;
+    }
 
     switch( choice )
     {
@@ -192,11 +255,22 @@ void App::loggedNotAdminUserMainMenu()
     std::cout << " 1. logout" << std::endl;
     std::cout << " 2. change password" << std::endl;
 
-    std::cout << " 5. exit" << std::endl;
+    std::cout << " 3. exit" << std::endl;
+
+    std::string choiceString;
+    std::cout << "1-3> ";
+    std::cin >> choiceString;
 
     int choice = 0;
-    std::cout << "> ";
-    std::cin >> choice;
+    try
+    {
+        choice = std::stoi( choiceString );
+    }
+    catch( ... )
+    {
+        std::cout << "[WARNING] Invalid choice, enter only numbers" << std::endl;
+        return;
+    }
 
     switch( choice )
     {
@@ -207,7 +281,7 @@ void App::loggedNotAdminUserMainMenu()
         this->changePassword();
         break;
 
-    case 5:
+    case 3:
         this->exit();
         break;
     default:
@@ -240,17 +314,33 @@ void App::login()
         return;
     }
 
+    if( user->getPassword() == "-" ) // default "empty" password
+    {
+        m_loggedUserName = login;
+        m_countLoginFail = 0;
+        return;
+    }
+
     std::string password;
-    std::cout << "Enter password: ";
+    if( m_countLoginFail > 0 )
+    {
+        std::cout << "Enter password (" << this->getRemainingLoginAttemptsNumber() << " attempt(s) left): ";
+    }
+    else
+    {
+        std::cout << "Enter password: ";
+    }
     std::cin >> password;
 
     if( user->getPassword() != password )
     {
         std::cout << "[WARNING] Invalid password" << std::endl;
+        ++m_countLoginFail;
         return;
     }
 
     m_loggedUserName = login;
+    m_countLoginFail = 0;
 }
 
 void App::logout()
@@ -260,15 +350,19 @@ void App::logout()
 
 void App::changePassword()
 {
-    std::string currentPassword;
-    std::cout << "Enter current password: ";
-    std::cin >> currentPassword;
-
     User & currentUser = this->getLoggedUser();
-    if( currentUser.getPassword() != currentPassword )
+    
+    if( currentUser.getPassword() != "-" )
     {
-        std::cout << "[WARNING] Invalid password" << std::endl;
-        return;
+        std::string currentPassword;
+        std::cout << "Enter current password: ";
+        std::cin >> currentPassword;
+
+        if( currentUser.getPassword() != currentPassword )
+        {
+            std::cout << "[WARNING] Invalid password" << std::endl;
+            return;
+        }
     }
 
     std::string newPassword;
@@ -292,13 +386,17 @@ void App::changePassword()
     }
 
     currentUser.setPassword( newPassword );
+
+    this->writeUsers();
 }
 
 void App::listUsers()
 {
+    std::cout << "All users list:" << std::endl;
+
     for( const User & user : m_users )
     {
-        std::cout << user.getLogin() << std::endl;
+        std::cout << " " << user.getLogin() << std::endl;
     }
 }
 
@@ -444,7 +542,7 @@ void App::createNewUser()
     User user = User();
 
     user.setLogin( login );
-    user.setPassword( "user" ); // default password for user
+    user.setPassword( "-" );
     user.setIsAdmin( false );
     user.setIsBlocked( false );
 
@@ -453,6 +551,12 @@ void App::createNewUser()
     this->writeUsers();
 
     std::cout << "User with login '" << login << "' is successfully created" << std::endl;
+}
+
+void App::about()
+{
+    std::cout << "Author: Sofja Efremova, BS-72" << std::endl;
+    std::cout << "Task: variant 5, password must contain letters, digits and punctuation marks" << std::endl;
 }
 
 void App::readUsers()
@@ -512,7 +616,7 @@ void App::resetUsers()
     User admin = User();
 
     admin.setLogin( "admin" );
-    admin.setPassword( "admin" );
+    admin.setPassword( "-" );
     admin.setIsAdmin( true );
     admin.setIsBlocked( false );
 
@@ -563,7 +667,6 @@ User & App::getLoggedUser()
 
 bool App::checkPassword( const std::string & _pass ) const
 {
-    // dummy check
     if( _pass.length() < 3 )
     {
         return false;
@@ -608,4 +711,14 @@ bool App::checkPassword( const std::string & _pass ) const
     }
 
     return true;
+}
+
+bool App::checkIsBruteForce() const
+{
+    return m_countLoginFail == 3;
+}
+
+int App::getRemainingLoginAttemptsNumber() const
+{
+    return 3 - m_countLoginFail;
 }

@@ -3,29 +3,6 @@
 #include "User.h"
 #include <vector>
 
-/*
-password limits:
-	- contain latin letters, digits and punctuation marks ("",.;:!?)(\/")
-
-user:
-	- bool is_admin
-	- bool is_blocked
-
-	- string login (unique)
-	- string password (empty on create)
-
-app:
-	- login (with retry)
-	- change pass (all)
-	- list all users (admin)
-		- block/unblock user
-		- enable/disable password limit (limit by variant 5)
-		- add new unique user (with empty password)
-	- exit
-*/
-
-// TODO: password brute force check feature!
-
 class App
 {
 public:
@@ -55,6 +32,7 @@ protected:
 	void enableAdminUser();
 	void disableAdminUser();
     void createNewUser();
+	void about();
 
 protected: // debug
 	void readUsers();
@@ -69,11 +47,14 @@ protected:
 	User & getLoggedUser();
 
 	bool checkPassword( const std::string & _pass ) const;
+	bool checkIsBruteForce() const;
+	int getRemainingLoginAttemptsNumber() const;
 
 private:
 	bool m_isRunned;
 
 private:
+	int32_t m_countLoginFail;
 	std::string m_loggedUserName;
 	std::vector<User> m_users;
 };
