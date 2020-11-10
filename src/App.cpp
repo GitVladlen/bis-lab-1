@@ -8,6 +8,7 @@
 
 static const char * DEFAULT_DATA_FILE_NAME = "users.txt";
 static const char * DEFAULT_USER_EMPTY_PASSWORD = "-";
+static const char * DEFAULT_ADMIN_USER_LOGIN = "ADMIN";
 
 App::App()
     : m_isRunned( false )
@@ -352,7 +353,14 @@ void App::changePassword()
     }
 
     std::string newPassword;
-    std::cout << "Enter new password (letters, digits, punctuation marks): ";
+    if( currentUser.getIsPasswordCheck() == true )
+    {
+        std::cout << "Enter new password (letters, digits, punctuation marks): ";
+    }
+    else
+    {
+        std::cout << "Enter new password (no password check): ";
+    }
     std::cin >> newPassword;
 
     if( currentUser.getIsPasswordCheck() == true &&  this->checkPassword( newPassword ) == false )
@@ -561,8 +569,9 @@ void App::readUsers()
         std::string password;
         bool isAdmin;
         bool isBlocked;
+        bool isPasswordCheck;
 
-        if( !(iss >> login >> password >> isAdmin >> isBlocked) )
+        if( !(iss >> login >> password >> isAdmin >> isBlocked >> isPasswordCheck) )
         {
             break;
         } // error
@@ -573,11 +582,26 @@ void App::readUsers()
         user.setPassword( password );
         user.setIsAdmin( isAdmin );
         user.setIsBlocked( isBlocked );
+        user.setIsPasswordCheck( isPasswordCheck );
 
         m_users.emplace_back( user );
     }
 
     inFile.close();
+
+    if( m_users.empty() )
+    {
+        User user = User();
+
+        user.setLogin( DEFAULT_ADMIN_USER_LOGIN );
+        user.setPassword( DEFAULT_USER_EMPTY_PASSWORD );
+        user.setIsAdmin( true );
+        user.setIsBlocked( false );
+
+        m_users.emplace_back( user );
+
+        this->writeUsers();
+    }
 }
 
 void App::writeUsers()
