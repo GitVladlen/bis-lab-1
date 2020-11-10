@@ -7,6 +7,7 @@
 #include <string>
 
 static const char * DEFAULT_DATA_FILE_NAME = "users.txt";
+static const char * DEFAULT_USER_EMPTY_PASSWORD = "-";
 
 App::App()
     : m_isRunned( false )
@@ -47,6 +48,7 @@ void App::mainMenu()
     if( m_loggedUserName.empty() == true )
     {
         this->notLoggedUserMainMenu();
+        std::cout << std::endl;
         return;
     }
 
@@ -60,6 +62,8 @@ void App::mainMenu()
     {
         this->loggedNotAdminUserMainMenu();
     }
+
+    std::cout << std::endl;
 }
 
 void App::notLoggedUserMainMenu()
@@ -104,12 +108,6 @@ void App::notLoggedUserMainMenu()
         std::cout << " 2. about" << std::endl;
         std::cout << " 3. exit" << std::endl;
 
-        std::cout << "[debug]" << std::endl;
-        std::cout << " 11. read users" << std::endl;
-        std::cout << " 12. write users" << std::endl;
-        std::cout << " 13. print users" << std::endl;
-        std::cout << " 14. reset users" << std::endl;
-
         std::string choiceString;
         std::cout << "1-3> ";
         std::cin >> choiceString;
@@ -133,21 +131,9 @@ void App::notLoggedUserMainMenu()
         case 2:
             this->about();
             break;
+
         case 3:
             this->exit();
-            break;
-
-        case 11:
-            this->readUsers();
-            break;
-        case 12:
-            this->writeUsers();
-            break;
-        case 13:
-            this->printUsers();
-            break;
-        case 14:
-            this->resetUsers();
             break;
 
         default:
@@ -314,7 +300,7 @@ void App::login()
         return;
     }
 
-    if( user->getPassword() == "-" ) // default "empty" password
+    if( user->getPassword() == DEFAULT_USER_EMPTY_PASSWORD )
     {
         m_loggedUserName = login;
         m_countLoginFail = 0;
@@ -352,7 +338,7 @@ void App::changePassword()
 {
     User & currentUser = this->getLoggedUser();
     
-    if( currentUser.getPassword() != "-" )
+    if( currentUser.getPassword() != DEFAULT_USER_EMPTY_PASSWORD )
     {
         std::string currentPassword;
         std::cout << "Enter current password: ";
@@ -542,7 +528,7 @@ void App::createNewUser()
     User user = User();
 
     user.setLogin( login );
-    user.setPassword( "-" );
+    user.setPassword( DEFAULT_USER_EMPTY_PASSWORD );
     user.setIsAdmin( false );
     user.setIsBlocked( false );
 
@@ -604,35 +590,6 @@ void App::writeUsers()
     }
 
     outFile.close();
-}
-
-void App::resetUsers()
-{
-    m_loggedUserName = "";
-    m_users.clear();
-
-    std::ofstream outFile( DEFAULT_DATA_FILE_NAME );
-
-    User admin = User();
-
-    admin.setLogin( "admin" );
-    admin.setPassword( "-" );
-    admin.setIsAdmin( true );
-    admin.setIsBlocked( false );
-
-    outFile << admin.toString() << std::endl;
-
-    outFile.close();
-
-    this->readUsers();
-}
-
-void App::printUsers()
-{
-    for( const User & user : m_users )
-    {
-        std::cout << user.toStringDebug() << std::endl;
-    }
 }
 
 bool App::hasUser( const std::string & _userLogin ) const

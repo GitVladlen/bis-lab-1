@@ -26,7 +26,6 @@ public:
 
 public:
     std::string toString() const;
-    std::string toStringDebug() const;
 
 private:
     std::string m_login;

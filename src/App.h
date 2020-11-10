@@ -34,12 +34,9 @@ protected:
     void createNewUser();
 	void about();
 
-protected: // debug
+protected:
 	void readUsers();
 	void writeUsers();
-	
-	void resetUsers();
-	void printUsers();
 
 protected:
 	bool hasUser( const std::string & _userLogin ) const;
