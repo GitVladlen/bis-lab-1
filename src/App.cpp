@@ -522,7 +522,6 @@ void App::disableAdminUser()
 
 void App::createNewUser()
 {
-    // todo: implement this
     std::string login;
     std::cout << "Enter new user login: ";
     std::cin >> login;
